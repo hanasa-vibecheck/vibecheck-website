@@ -34,6 +34,14 @@
   .rcode { text-align: center; font-size: 22px; font-weight: 800; letter-spacing: .08em; direction: ltr; }
   .done { text-align: center; }
   .done .big { font-size: 52px; line-height: 1; }
+  .copyrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); margin: 8px 0; }
+  .copyrow span { color: var(--muted); font-size: 14px; }
+  .copyrow b { font-size: 19px; direction: ltr; unicode-bidi: isolate; }
+  .copyrow button { font: inherit; font-weight: 700; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
+  .steps2 { padding-inline-start: 20px; margin: 10px 0; }
+  .steps2 li { margin: 6px 0; }
+  .waitbox { text-align: center; }
+  .waitbox .big { font-size: 46px; line-height: 1; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -99,6 +107,32 @@
       <p class="err" id="eQr" hidden></p>
     </div>
 
+    <!-- 4b: manual FIB transfer -->
+    <div id="sManual" hidden>
+      <p style="text-align:center;margin:0 0 6px"><b id="mPlan"></b></p>
+      <div class="copyrow"><div><span data-l="en">Amount</span><span data-l="ckb">بڕ</span><span data-l="ar">المبلغ</span><br><b id="mAmount"></b></div><button type="button" data-copy="mAmountRaw"><span data-l="en">Copy</span><span data-l="ckb">کۆپی</span><span data-l="ar">نسخ</span></button></div>
+      <div class="copyrow"><div><span data-l="en">Send to this FIB number</span><span data-l="ckb">بنێرە بۆ ئەم ژمارە FIB ـە</span><span data-l="ar">أرسل إلى رقم FIB هذا</span><br><b id="mNumber"></b><br><span id="mName" dir="ltr" style="unicode-bidi:isolate"></span></div><button type="button" data-copy="mNumber"><span data-l="en">Copy</span><span data-l="ckb">کۆپی</span><span data-l="ar">نسخ</span></button></div>
+      <div class="copyrow"><div><span data-l="en">Write this code in the note</span><span data-l="ckb">ئەم کۆدە لە تێبینیدا بنووسە</span><span data-l="ar">اكتب هذا الرمز في الملاحظة</span><br><b id="mCode"></b></div><button type="button" data-copy="mCode"><span data-l="en">Copy</span><span data-l="ckb">کۆپی</span><span data-l="ar">نسخ</span></button></div>
+      <ol class="steps2" data-l="en"><li>Open the FIB app and send the exact amount to the number above.</li><li>Put the code in the note, so we know it's you.</li><li>Come back here and tap <b>I've paid</b>.</li></ol>
+      <ol class="steps2" data-l="ckb"><li>ئەپی FIB بکەرەوە و هەمان بڕ بنێرە بۆ ئەو ژمارەیەی سەرەوە.</li><li>کۆدەکە لە تێبینیدا بنووسە، بۆ ئەوەی بزانین تۆیت.</li><li>بگەڕێوە ئێرە و <b>پارەم دا</b> دابگرە.</li></ol>
+      <ol class="steps2" data-l="ar"><li>افتح تطبيق FIB وأرسل المبلغ نفسه إلى الرقم أعلاه.</li><li>اكتب الرمز في الملاحظة لنعرف أنه أنت.</li><li>عُد إلى هنا واضغط <b>دفعت</b>.</li></ol>
+      <p class="err" id="eManual" hidden></p>
+      <button class="btn primary" type="button" id="paidBtn"><span data-l="en">I've paid</span><span data-l="ckb">پارەم دا</span><span data-l="ar">دفعت</span></button>
+      <button class="btn ghost" type="button" id="manualBack"><span data-l="en">Choose another plan</span><span data-l="ckb">پلانێکی تر هەڵبژێرە</span><span data-l="ar">اختر خطة أخرى</span></button>
+    </div>
+
+    <!-- 4c: waiting for the team to confirm -->
+    <div id="sReported" class="waitbox" hidden>
+      <div class="big">⏳</div>
+      <h2 style="margin:10px 0 4px"><span data-l="en">Thanks! We're checking your payment</span><span data-l="ckb">سوپاس! پارەدانەکەت دەپشکنین</span><span data-l="ar">شكراً! نتحقق من دفعتك</span></h2>
+      <p class="muted"><span data-l="en">Code</span><span data-l="ckb">کۆد</span><span data-l="ar">الرمز</span> <b id="rRef" dir="ltr"></b></p>
+      <p class="muted" data-l="en">Usually within an hour (09:00–24:00). You'll get a notification in the VibeCheck app when your plan is on. You can close this page.</p>
+      <p class="muted" data-l="ckb">زۆربەی کات لە ماوەی یەک کاتژمێردا (09:00–24:00). کاتێک پلانەکەت چالاک بوو لە ئەپی ڤایب چێک ئاگادار دەکرێیتەوە. دەتوانیت ئەم پەڕەیە دابخەیت.</p>
+      <p class="muted" data-l="ar">عادةً خلال ساعة (09:00–24:00). ستصلك إشعار في تطبيق VibeCheck عند تفعيل خطتك. يمكنك إغلاق هذه الصفحة.</p>
+      <p class="err" id="eReported" hidden></p>
+      <a class="btn ghost" id="waLink" href="https://wa.me/9647710001313" target="_blank" rel="noopener"><span data-l="en">Questions? WhatsApp us</span><span data-l="ckb">پرسیارت هەیە؟ لە واتسئەپ نامەمان بۆ بنێرە</span><span data-l="ar">أسئلة؟ راسلنا على واتساب</span></a>
+    </div>
+
     <!-- 5: done -->
     <div id="sDone" class="done" hidden>
       <div class="big">✓</div>
@@ -130,14 +164,17 @@
     noAccount: { en: "There's no VibeCheck account with this number yet. Download the app and create your account first.", ckb: "هێشتا هیچ هەژمارێکی ڤایب چێک بەم ژمارەیە نییە. سەرەتا ئەپەکە دابەزێنە و هەژمارەکەت دروست بکە.", ar: "لا يوجد حساب VibeCheck بهذا الرقم بعد. حمّل التطبيق وأنشئ حسابك أولاً." },
     notReady: { en: "Payments aren't open yet. Please try again on launch day.", ckb: "پارەدان هێشتا نەکراوەتەوە. تکایە لە ڕۆژی بڵاوکردنەوە هەوڵ بدەرەوە.", ar: "الدفع غير متاح بعد. حاول مجدداً يوم الإطلاق." },
     failed: { en: "Something went wrong. Please try again.", ckb: "هەڵەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەرەوە.", ar: "حدث خطأ ما. يرجى المحاولة مجدداً." },
+    notFound: { en: "We couldn't find this payment in FIB. If you sent it, message us on WhatsApp with the code and a screenshot.", ckb: "ئەم پارەدانەمان لە FIB نەدۆزییەوە. ئەگەر ناردووتە، کۆدەکە و وێنەیەکی شاشە لە واتسئەپ بۆمان بنێرە.", ar: "لم نجد هذه الدفعة في FIB. إن كنت أرسلتها، راسلنا على واتساب مع الرمز ولقطة شاشة." },
+    slow: { en: "Taking longer than usual? Message us on WhatsApp with your code.", ckb: "لە ئاسایی زیاتر دەخایەنێت؟ کۆدەکەت لە واتسئەپ بۆمان بنێرە.", ar: "يستغرق وقتاً أطول من المعتاد؟ راسلنا على واتساب مع رمزك." },
+    copied: { en: "Copied", ckb: "کۆپی کرا", ar: "تم النسخ" },
     declined: { en: "The payment was cancelled or ran out of time. Choose a plan to try again.", ckb: "پارەدانەکە هەڵوەشایەوە یان کاتی بەسەرچوو. پلانێک هەڵبژێرە بۆ دووبارە هەوڵدان.", ar: "أُلغي الدفع أو انتهى وقته. اختر خطة للمحاولة مجدداً." },
   };
   const msg = k => M[k][lang()] || M[k].en;
   const NAMES = { golden: "★ Golden VIP", diamond: "◆ Diamond VIP", plus: "Plus" };
-  const steps = ["sClosed", "sPhone", "sCode", "sPick", "sQr", "sDone"];
+  const steps = ["sClosed", "sPhone", "sCode", "sPick", "sQr", "sManual", "sReported", "sDone"];
   const show = id => steps.forEach(s => { $("#" + s).hidden = s !== id; });
   const err = (id, text) => { const e = $(id); e.textContent = text || ""; e.hidden = !text; };
-  let phone = "", poll = null;
+  let phone = "", poll = null, payCfg = { mode: "manual" }, ref = null;
 
   function e164(v) {
     let d = v.replace(/\D/g, "");
@@ -152,7 +189,8 @@
     const { data: p } = await sb.from("profiles").select("display_name").eq("id", u.user.id).maybeSingle();
     $("#who").textContent = (p?.display_name ? p.display_name + " · " : "") + (u.user.phone ? "+" + u.user.phone.replace(/^\+/, "") : "");
     show("sPick");
-    if (!p) err("#ePick", msg("noAccount"));
+    if (!p) return err("#ePick", msg("noAccount"));
+    if (payCfg.mode !== "fib_api") await resumeManual();
   }
 
   $("#sPhone").onsubmit = async ev => {
@@ -193,6 +231,7 @@
     err("#ePick");
     document.querySelectorAll("[data-tier]").forEach(x => x.disabled = true);
     try {
+      if (payCfg.mode !== "fib_api") return await startManual(b.dataset.tier);
       const p = await call({ action: "create", tier: b.dataset.tier });
       $("#qrPlan").textContent = NAMES[b.dataset.tier];
       $("#qrAmount").textContent = Number(p.amount).toLocaleString("en") + " IQD";
@@ -202,11 +241,79 @@
       err("#eQr"); $("#waiting").hidden = false; show("sQr");
       startPolling(p.paymentId, p.validUntil);
     } catch (e) {
-      err("#ePick", e.message === "no_account" ? msg("noAccount") : e.message === "not_configured" ? msg("notReady") : msg("failed"));
+      const m = String(e.message || e);
+      err("#ePick", /no_account/.test(m) ? msg("noAccount") : /not_configured|not_ready/.test(m) ? msg("notReady") : /too_many/.test(m) ? msg("tooMany") : msg("failed"));
     } finally {
       document.querySelectorAll("[data-tier]").forEach(x => x.disabled = false);
     }
   });
+
+  // ---------- Manual FIB transfer ----------
+  function showManual(r) {
+    ref = r.ref_code;
+    $("#mPlan").textContent = NAMES[r.tier] || r.tier;
+    $("#mAmount").textContent = Number(r.amount_iqd).toLocaleString("en") + " IQD";
+    $("#mAmount").dataset.raw = String(r.amount_iqd);
+    $("#mNumber").textContent = r.fib_number || "";
+    $("#mName").textContent = r.fib_name || "";
+    $("#mCode").textContent = r.ref_code;
+    err("#eManual");
+    if (r.status === "reported") return showReported();
+    show("sManual");
+  }
+  async function startManual(tier) {
+    const { data, error } = await sb.rpc("start_manual_payment", { p_tier: tier });
+    if (error) throw new Error(error.message);
+    showManual(Array.isArray(data) ? data[0] : data);
+  }
+  document.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
+    const el = b.dataset.copy === "mAmountRaw" ? $("#mAmount") : $("#" + b.dataset.copy);
+    const text = b.dataset.copy === "mAmountRaw" ? el.dataset.raw : el.textContent.replace(/\s/g, "");
+    try { await navigator.clipboard.writeText(text); const o = b.innerHTML; b.textContent = msg("copied"); setTimeout(() => { b.innerHTML = o; }, 1500); } catch {}
+  });
+  $("#manualBack").onclick = () => { clearInterval(poll); show("sPick"); };
+  $("#paidBtn").onclick = async () => {
+    $("#paidBtn").disabled = true; err("#eManual");
+    const { error } = await sb.rpc("report_manual_payment", { p_ref: ref });
+    $("#paidBtn").disabled = false;
+    if (error) return err("#eManual", msg("failed"));
+    sb.functions.invoke("notify-team", { body: { kind: "payment", ref } }).catch(() => {});
+    showReported();
+  };
+  function showReported() {
+    $("#rRef").textContent = ref; err("#eReported"); show("sReported");
+    clearInterval(poll);
+    const started = Date.now();
+    const check = async () => {
+      if (document.hidden) return;
+      const { data } = await sb.from("fib_payments").select("status, tier, reported_at").eq("fib_payment_id", ref).maybeSingle();
+      if (!data) return;
+      if (data.status === "paid") {
+        clearInterval(poll);
+        const { data: plan } = await sb.rpc("my_plan");
+        const row = Array.isArray(plan) ? plan[0] : plan;
+        $("#donePlan").textContent = NAMES[data.tier] || data.tier;
+        $("#doneEnd").textContent = row?.ends_at ? new Date(row.ends_at).toLocaleDateString(lang() === "en" ? "en-GB" : "ar-IQ") : "";
+        show("sDone");
+      } else if (data.status === "declined") {
+        clearInterval(poll); err("#eReported", msg("notFound"));
+      } else if (data.reported_at && Date.now() - new Date(data.reported_at).getTime() > 24 * 3600 * 1000) {
+        err("#eReported", msg("slow"));
+      }
+    };
+    check(); poll = setInterval(check, 10000);
+    void started;
+  }
+  // Pick up where I left off (an open manual payment).
+  async function resumeManual() {
+    const { data } = await sb.from("fib_payments").select("fib_payment_id, tier, amount_iqd, status, method, created_at")
+      .eq("method", "manual").in("status", ["unpaid", "reported"]).order("created_at", { ascending: false }).limit(1);
+    const r = data && data[0];
+    if (!r) return false;
+    if (r.status === "unpaid" && Date.now() - new Date(r.created_at).getTime() > 24 * 3600 * 1000) return false;
+    showManual({ ref_code: r.fib_payment_id, tier: r.tier, amount_iqd: r.amount_iqd, status: r.status, fib_number: payCfg.fib_number, fib_name: payCfg.fib_name });
+    return true;
+  }
 
   function startPolling(id, until) {
     clearInterval(poll);
@@ -231,6 +338,9 @@
   (async () => {
     const { data } = await sb.from("app_settings").select("value").eq("key", "accounts_online").maybeSingle();
     if (!data || data.value !== true) return show("sClosed");
+    const { data: pc } = await sb.from("app_settings").select("value").eq("key", "payments").maybeSingle();
+    if (pc && pc.value) payCfg = pc.value;
+    if (payCfg.mode !== "fib_api" && !payCfg.fib_number) return show("sClosed");
     const { data: s } = await sb.auth.getSession();
     if (s?.session) afterSignIn(); else show("sPhone");
   })();
